@@ -32,6 +32,31 @@ describe('test/egg/logger.test.js', () => {
         done();
       });
   });
+  it('should not create output file', done => {
+    const file1 = path.join(__dirname, '../../fixtures/tmp/shouldnotexist.log');
+    const options = {
+      file: file1,
+      level: levels.ERROR,
+      disableFileTransport: true,
+    };
+    coffee.fork(loggerFile, [ JSON.stringify(options) ])
+      .end(() => {
+        fs.existsSync(filepath).should.match(false);
+        done();
+      });
+  });
+  it('should not create output file', done => {
+    const file2 = path.join(__dirname, '../../fixtures/tmp/shouldexist.log');
+    const options = {
+      file: file2,
+      level: levels.ERROR,
+    };
+    coffee.fork(loggerFile, [ JSON.stringify(options) ])
+      .end(() => {
+        fs.existsSync(filepath).should.match(true);
+        done();
+      });
+  });
 
   it('should un-redirect specific level to logger', done => {
     const file1 = path.join(__dirname, '../../fixtures/tmp/file1.log');
